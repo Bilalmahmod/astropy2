@@ -1,7 +1,6 @@
-Flask
-pandas
-astropy
-astroplan
-pytz
-matplotlib
-openpyxl
+Flask               # لإنشاء تطبيق الويب
+openpyxl            # لقراءة ملفات .xlsx مباشرة دون حاجة لـ pandas
+astropy             # حساب الإحداثيات الفلكية
+astroplan           # حساب شروق/غروب وتتبُّع الأجرام
+pytz                # إدارة المناطق الزمنية
+matplotlib          # رسم المخططات بيانيّاً

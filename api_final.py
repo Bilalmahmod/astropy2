@@ -1,6 +1,7 @@
+# api_final.py
 from flask import Flask, request, jsonify, render_template, Response, url_for
 import os
-import pandas as pd
+from openpyxl import load_workbook
 from astropy.coordinates import SkyCoord, EarthLocation
 from astropy.time import Time
 import astropy.units as u
@@ -14,31 +15,63 @@ from io import BytesIO
 
 app = Flask(__name__)
 
+# مسار ملف الإكسل
 script_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(script_dir, 'Objects.xlsx')
 if not os.path.exists(file_path):
     raise FileNotFoundError(f"File not found: {file_path}")
-data = pd.read_excel(file_path)
 
+# قراءة ورقة العمل
+wb = load_workbook(file_path, data_only=True)
+ws = wb.active
+
+# استخراج أسماء الأعمدة لبناء فهارس
+header = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
+idx = {
+    'object': header.index('object'),
+    'R.A._H': header.index('R.A._H'),
+    'R.A._M': header.index('R.A._M'),
+    'R.A._S': header.index('R.A._S'),
+    'DEC._H': header.index('DEC._H'),
+    'DEC._M': header.index('DEC._M'),
+    'DEC._S': header.index('DEC._S'),
+}
+
+# تحميل البيانات في قائمة من القواميس
+data = []
+for row in ws.iter_rows(min_row=2, values_only=True):
+    obj_name = row[idx['object']]
+    data.append({
+        'object': str(obj_name).strip().lower(),
+        'R.A._H': float(row[idx['R.A._H']]),
+        'R.A._M': float(row[idx['R.A._M']]),
+        'R.A._S': float(row[idx['R.A._S']]),
+        'DEC._H': float(row[idx['DEC._H']]),
+        'DEC._M': float(row[idx['DEC._M']]),
+        'DEC._S': float(row[idx['DEC._S']]),
+    })
+
+# إعداد موقع الراصد
 latitude = 33.27427886628448
 longitude = 44.3800838290597
 elevation = 40
-location = EarthLocation(lat=latitude * u.deg,
-                         lon=longitude * u.deg,
-                         height=elevation * u.m)
+location = EarthLocation(
+    lat=latitude * u.deg,
+    lon=longitude * u.deg,
+    height=elevation * u.m
+)
 
 local_tz = timezone('Asia/Baghdad')
-
 observer = Observer(location=location, timezone=local_tz)
 
 def get_target(object_name: str) -> FixedTarget:
-    obj = data[data['object'].str.strip().str.lower() == object_name.lower()]
-    if obj.empty:
+    key = object_name.strip().lower()
+    matches = [d for d in data if d['object'] == key]
+    if not matches:
         return None
-    ra_h, ra_m, ra_s = obj.iloc[0][['R.A._H', 'R.A._M', 'R.A._S']].astype(float)
-    dec_h, dec_m, dec_s = obj.iloc[0][['DEC._H', 'DEC._M', 'DEC._S']].astype(float)
-    ra = ra_h + ra_m / 60 + ra_s / 3600
-    dec = dec_h + dec_m / 60 + dec_s / 3600
+    obj = matches[0]
+    ra = obj['R.A._H'] + obj['R.A._M'] / 60 + obj['R.A._S'] / 3600
+    dec = obj['DEC._H'] + obj['DEC._M'] / 60 + obj['DEC._S'] / 3600
     coord = SkyCoord(ra=ra * u.hour, dec=dec * u.deg, frame='icrs')
     return FixedTarget(coord=coord, name=object_name)
 
