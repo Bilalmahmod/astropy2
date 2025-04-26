@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Altitude And Azimuth Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+  </head>
+  <body>
+    <canvas id="particleCanvas"></canvas>
+    <div class="container reveal">
+      <h1>Altitude And Azimuth Calculator</h1>
+      <p>Enter the specific date and time and the name of the object.</p>
+      <label for="date">Date and Time:</label>
+      <input type="datetime-local" id="date">
+      <label for="object">Object Name:</label>
+      <input type="text" id="object" placeholder="e.g., 3c 400">
+      <button onclick="calculate()">Calculate</button>
+    </div>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+  </body>
+</html>

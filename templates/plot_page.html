@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plot for {{ object_name }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/plot_page.css') }}">
+</head>
+<body>
+  <canvas id="particleCanvas"></canvas>
+  <div class="container reveal">
+    <h1>Altitude vs Time for {{ object_name }}</h1>
+    <h3>Date: {{ datetime_str }}</h3>
+    <img src="{{ plot_url }}" alt="Plot of Altitude vs Time">
+
+    <div class="info-grid">
+      <div class="info-card">
+        <i class="fas fa-arrow-up"></i>
+        <p><strong>Altitude:</strong> {{ altitude }}°</p>
+      </div>
+      <div class="info-card">
+        <i class="fas fa-compass"></i>
+        <p><strong>Azimuth:</strong> {{ azimuth }}°</p>
+      </div>
+      <div class="info-card">
+        <i class="fas fa-sunset"></i>
+        <p><strong>Set:</strong> {{ set }}</p>
+      </div>
+      <div class="info-card">
+        <i class="fas fa-sunrise"></i>
+        <p><strong>Rise:</strong> {{ rise }}</p>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+      <div class="info-card" style="text-align: center; padding: 15px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);">
+        <i class="fas fa-sunrise" style="font-size: 24px; color: #4CAF50;"></i>
+        <p style="margin: 0 15px 0 15px; font-size: 18px;">
+          <a href="{{ url_for('index') }}" style="color: #f7f7f7; text-decoration: none; transition: all 0.3s ease;">
+            Back to Calculator
+          </a>
+        </p>
+      </div>
+    </div>
+</div>
+  <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='js/plot_page.js') }}"></script>
+</body>
+</html>
