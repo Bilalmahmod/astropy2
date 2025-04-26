@@ -1,15 +1,15 @@
 {
   "version": 2,
-  "functions": {
-    "api_final.py": {
-      "runtime": "vercel-python@3.12",
-      "includeFiles": "Objects.xlsx"
-    }
-  },
-  "routes": [
+  "builds": [
     {
-      "src": "/(.*)",
-      "dest": "api_final.py"
+      "src": "api_final.py",
+      "use": "@vercel/python",
+      "config": {
+        "excludeFiles": "*.xlsx"
+      }
     }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/api_final.py" }
   ]
 }
