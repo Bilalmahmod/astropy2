@@ -1,6 +1,10 @@
 # api_final.py
 from flask import Flask, request, jsonify, render_template, Response, url_for
 import os
+
+# Force Matplotlib to use a writable cache directory
+os.environ['MPLCONFIGDIR'] = '/tmp/.matplotlib'
+
 from openpyxl import load_workbook
 from astropy.coordinates import SkyCoord, EarthLocation
 from astropy.time import Time
