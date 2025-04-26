@@ -1,0 +1,13 @@
+# caches & artifacts
+*.cache/
+__pycache__/
+.ipynb_checkpoints/
+
+# virtual envs
+.venv/
+env/
+venv/
+
+# macOS/Windows cruft
+*.DS_Store
+Thumbs.db
